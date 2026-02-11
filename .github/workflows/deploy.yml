@@ -14,7 +14,10 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script_stop: true
           script: |
-            cd /opt/infra && git pull origin main
+            cd /opt/infra
+            git fetch origin main
+            git reset --hard origin/main
             docker compose up -d
             docker compose exec nginx-proxy nginx -s reload
