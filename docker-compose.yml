@@ -1,0 +1,25 @@
+services:
+  # ─── Edge reverse proxy (SSL termination + subdomain routing) ───
+  nginx-proxy:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./certbot/www:/var/www/certbot:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+    networks:
+      - reverse-proxy
+    restart: unless-stopped
+
+  # ─── Let's Encrypt certificate manager ───
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+
+networks:
+  reverse-proxy:
+    name: reverse-proxy

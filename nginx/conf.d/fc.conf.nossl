@@ -1,0 +1,16 @@
+# HTTP-only bootstrap config for initial certbot certificate request.
+# Does NOT proxy to any backend — only serves ACME challenges.
+# Replace with fc.conf after certificates are obtained.
+
+server {
+    listen 80;
+    server_name app.mishurovsky.school teach.mishurovsky.school;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 503;
+    }
+}
